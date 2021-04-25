@@ -1,10 +1,13 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type OrderStatus int
 
 type Product struct {
-	name  string
-	price float32
+	name   string
+	amount int
+	price  float32
 }
 
 const (
@@ -15,7 +18,7 @@ const (
 )
 
 type Order struct {
-	id       string
+	id       primitive.ObjectID
 	status   OrderStatus
 	products []Product
 }
