@@ -1,6 +1,6 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import "api-orders/api-orders/forms"
 
 type OrderStatus int
 
@@ -18,7 +18,17 @@ const (
 )
 
 type Order struct {
-	id       primitive.ObjectID
+	id       string
 	status   OrderStatus
 	products []Product
+}
+
+func (model Order) Create(input forms.CreateOrder) Order {
+	order := Order{
+		id:       "id",
+		status:   CREATED,
+		products: input.Products,
+	}
+
+	return order
 }
