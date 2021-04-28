@@ -1,13 +1,15 @@
 package models
 
-import "api-orders/api-orders/forms"
+import (
+	"api-orders/forms"
+)
 
 type OrderStatus int
 
 type Product struct {
-	name   string
-	amount int
-	price  float32
+	Name   string  `json:"name"`
+	Amount int     `json:"amount"`
+	Price  float32 `json:"price"`
 }
 
 const (
@@ -18,17 +20,20 @@ const (
 )
 
 type Order struct {
-	id       string
-	status   OrderStatus
-	products []Product
+	Id       string      `json:"id"`
+	Status   OrderStatus `json:"status"`
+	Products []Product   `json:"products"`
 }
 
 func (model Order) Create(input forms.CreateOrder) Order {
-	order := Order{
-		id:       "id",
-		status:   CREATED,
-		products: input.Products,
+	var products []Product
+	for _, v := range input.Products {
+		products = append(products, Product{Name: v.Name, Amount: v.Amount, Price: v.Price})
 	}
-
+	order := Order{
+		Id:       "id",
+		Status:   CREATED,
+		Products: products,
+	}
 	return order
 }

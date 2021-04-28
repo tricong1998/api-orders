@@ -1,6 +1,6 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import "api-orders/server"
 
 // @title Swagger Example API
 // @version 1.0
@@ -37,6 +37,5 @@ import "github.com/gin-gonic/gin"
 // @scope.admin Grants read and write access to administrative information
 
 func main() {
-	r := gin.Default()
-	r.Run()
+	server.InitServer()
 }
