@@ -1,45 +1,133 @@
-basePath: /api-orders
-host: localhost:8080
+basePath: /api
+definitions:
+  forms.CreateOrder:
+    properties:
+      product:
+        items:
+          $ref: '#/definitions/forms.Product'
+        type: array
+    required:
+    - product
+    type: object
+  forms.Product:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    required:
+    - amount
+    - name
+    - price
+    type: object
+  models.Order:
+    properties:
+      id:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      status:
+        type: string
+      userId:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+host: localhost:8081
 info:
   contact: {}
   description: api-orders
+  termsOfService: http://swagger.io/terms/
   title: Swagger Example API
   version: "1.0"
-paths: {}
+paths:
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create an order with status Created
+      operationId: api-orders-create-order
+      parameters:
+      - description: Add Product
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/forms.CreateOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: id
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create an order
+      tags:
+      - orders
+  /orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-read-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Find an order
+      tags:
+      - orders
+  /orders/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-cancel-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel an order
+      tags:
+      - orders
 securityDefinitions:
   ApiKeyAuth:
     in: header
-    name: Authorization
+    name: Access-token
     type: apiKey
-  BasicAuth:
-    type: basic
-  OAuth2AccessCode:
-    authorizationUrl: https://example.com/oauth/authorize
-    flow: accessCode
-    scopes:
-      admin: ' Grants read and write access to administrative information'
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
-  OAuth2Application:
-    flow: application
-    scopes:
-      admin: ' Grants read and write access to administrative information'
-      write: ' Grants write access'
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
-  OAuth2Implicit:
-    authorizationUrl: https://example.com/oauth/authorize
-    flow: implicit
-    scopes:
-      admin: ' Grants read and write access to administrative information'
-      write: ' Grants write access'
-    type: oauth2
-  OAuth2Password:
-    flow: password
-    scopes:
-      admin: ' Grants read and write access to administrative information'
-      read: ' Grants read access'
-      write: ' Grants write access'
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
 swagger: "2.0"
