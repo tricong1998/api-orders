@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"sync"
 	"time"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -51,10 +53,11 @@ func connect(databaseName string) (a *mongo.Database, b *mongo.Client) {
 }
 
 func getConnection(databaseName string) (*mongo.Database, *mongo.Client) {
-	clusterEndpoint := "mongodb://127.0.0.1:27017"
-
-	//os.Getenv("MONGODB_URI")
-
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	clusterEndpoint := os.Getenv("MONGODB_URI")
 	connectionURI := clusterEndpoint
 
 	//fmt.Sprintf(connectionStringTemplate, clusterEndpoint)

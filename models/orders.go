@@ -28,10 +28,11 @@ const ORDER_STATUS_DELIVERED = "DELIVERED"
 const ORDER_COLLECTION_NAME = "orders"
 
 type Order struct {
-	Id       primitive.ObjectID `json:"id"`
-	Status   string             `json:"status"`
-	Products []Product          `json:"products"`
-	UserId   string             `json:"userId"`
+	Id              primitive.ObjectID `json:"id"`
+	Status          string             `json:"status"`
+	Products        []Product          `json:"products"`
+	UserId          string             `json:"userId"`
+	IsSendToPayment bool               `json:"isSendToPayment"`
 }
 
 func (model Order) Create(input forms.CreateOrder, userId string) (primitive.ObjectID, error) {

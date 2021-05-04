@@ -52,6 +52,54 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /backend/orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-backend-read-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Find an order
+      tags:
+      - orders
+  /backend/orders/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-backend-cancel-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel an order
+      tags:
+      - orders
   /orders:
     post:
       consumes:

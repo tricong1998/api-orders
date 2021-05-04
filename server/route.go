@@ -29,6 +29,12 @@ func initRoute() *gin.Engine {
 
 	api := route.Group("api")
 	{
+		backendOrders := api.Group("backend/orders")
+		{
+			backendOrder := new(controllers.BackendOrdersController)
+			backendOrders.GET("/:id", backendOrder.FindOne)
+			backendOrders.POST("/:id/cancel", backendOrder.Cancel)
+		}
 		api.Use(middlewares.Authenticate())
 		orders := api.Group("orders")
 		{

@@ -17,7 +17,7 @@ type BackendOrdersController struct{}
 // @Produce  json
 // @Param id path string true "id"
 // @Success 200 {object} models.Order
-// @Router /orders/{id} [get]
+// @Router /backend/orders/{id} [get]
 // @Security ApiKeyAuth
 func (controller BackendOrdersController) FindOne(c *gin.Context) {
 	id := c.Param("id")
@@ -47,7 +47,7 @@ func (controller BackendOrdersController) FindOne(c *gin.Context) {
 // @Produce  json
 // @Param id path string true "id"
 // @Success 200 {object} models.Order
-// @Router /orders/{id}/cancel [post]
+// @Router /backend/orders/{id}/cancel [post]
 // @Security ApiKeyAuth
 func (controller BackendOrdersController) Cancel(c *gin.Context) {
 	id := c.Param("id")
