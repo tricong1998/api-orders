@@ -2,3 +2,4 @@ api-orders
 
 nodemon --exec go run main.go --signal SIGTERM
 swag init -g server/route.go 
+http://localhost:8081/swagger/index.html#/orders/api-orders-cancel-order

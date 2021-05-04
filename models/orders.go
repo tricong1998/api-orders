@@ -55,6 +55,26 @@ func (model Order) Create(input forms.CreateOrder, userId string) (primitive.Obj
 	return result.InsertedID.(primitive.ObjectID), err
 }
 
+func (model Order) FindOneById(id primitive.ObjectID) (*Order, error) {
+	var order Order
+
+	result := getCollection().FindOne(context.TODO(), bson.D{bson.E{"_id", id}})
+
+	if result == nil {
+		return nil, errors.New("Could not find a Order")
+	}
+	err := result.Decode(&order)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, errors.New("Could not find an Order")
+		}
+		return nil, err
+	}
+
+	return &order, nil
+}
+
 func (model Order) FindOneWithUserId(id primitive.ObjectID, userId string) (*Order, error) {
 	var order Order
 
@@ -73,6 +93,42 @@ func (model Order) FindOneWithUserId(id primitive.ObjectID, userId string) (*Ord
 	}
 
 	return &order, nil
+}
+
+func (model Order) CancelById(id primitive.ObjectID) (*Order, error) {
+	var order Order
+
+	result := getCollection().FindOne(context.TODO(), bson.D{bson.E{"_id", id}})
+	if result == nil {
+		return nil, errors.New("Could not find an Order")
+	}
+
+	err := result.Decode(&order)
+
+	if err != nil {
+		log.Printf("Failed marshalling %v", err)
+		return nil, err
+	}
+	log.Printf("Orders: %v", order)
+	if order.Status != ORDER_STATUS_DELIVERED {
+		return nil, errors.New("Could not cancel Order if Order status is not CREATED")
+	}
+	var updatedDocument Order
+	filter := bson.D{{"_id", id}}
+	update := bson.D{{"$set", bson.D{{"status", ORDER_STATUS_CANCELLED}}}}
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+	}
+	updateError := getCollection().FindOneAndUpdate(context.TODO(), filter, update, &opt).Decode(&updatedDocument)
+
+	if updateError != nil {
+		if updateError == mongo.ErrNoDocuments {
+			return nil, errors.New("Could not find an Order")
+		}
+		log.Fatal(err)
+	}
+	return &updatedDocument, nil
 }
 
 func (model Order) Cancel(id primitive.ObjectID, userId string) (*Order, error) {
@@ -95,7 +151,7 @@ func (model Order) Cancel(id primitive.ObjectID, userId string) (*Order, error) 
 	}
 	var updatedDocument Order
 	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set", bson.D{{"status", ORDER_STATUS_CANCELLED}}}}
+	update := bson.D{{"$set", bson.D{{"status", ORDER_STATUS_DELIVERED}}}}
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
