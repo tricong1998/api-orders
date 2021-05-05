@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"api-orders/forms"
-	"api-orders/models"
 	"api-orders/services"
 	"net/http"
 
@@ -12,7 +11,7 @@ import (
 
 type OrdersController struct{}
 
-var orderModel = new(models.Order)
+var orderModel = new(services.OrderService)
 
 //
 // @ID api-orders-create-order

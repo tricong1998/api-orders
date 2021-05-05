@@ -1,53 +1,40 @@
 package services
 
 import (
+	"api-orders/models"
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 type PaymentServices struct{}
 
-type Product struct {
-	Name   string  `json:"name"`
-	Amount int     `json:"amount"`
-	Price  float32 `json:"price"`
-}
-
-type OrderPayment struct {
-	Id              string    `json:"id"`
-	Status          string    `json:"status"`
-	Products        []Product `json:"products"`
-	UserId          string    `json:"userId"`
-	IsSendToPayment bool      `json:"isSendToPayment"`
-}
-
-func (paymentServices PaymentServices) SendOrderToPayment(order OrderPayment) {
+func (paymentServices PaymentServices) SendOrderToPayment(order models.Order) {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 	paymentUrl := os.Getenv("API_PAYMENTS_HOST") + os.Getenv("API_PAYMENTS_PORT")
-	client := &http.Client{
-		// Set timeout to abort if the request takes too long
-		Timeout: 30 * time.Second,
-	}
 
-	request, err := http.NewRequest("POST", paymentUrl, order)
-
+	postBody := new(bytes.Buffer)
+	json.NewEncoder(postBody).Encode(order)
+	//Leverage Go's HTTP Post function to make request
+	resp, err := http.Post(paymentUrl, "application/json", postBody)
+	//Handle Error
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err})
+		log.Fatalf("An Error Occured %v", err)
 	}
-
-	// Make website request call
-	resp, err := client.Do(request)
-
-	// If we have a successful request
-	if resp.StatusCode == 200 {
-
+	defer resp.Body.Close()
+	//Read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
 	}
+	sb := string(body)
+	log.Printf(sb)
 }
