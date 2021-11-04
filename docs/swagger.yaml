@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   forms.CreateOrder:
     properties:
@@ -26,6 +25,8 @@ definitions:
     properties:
       id:
         type: string
+      isSendToPayment:
+        type: boolean
       products:
         items:
           $ref: '#/definitions/models.Product'
@@ -44,13 +45,8 @@ definitions:
       price:
         type: number
     type: object
-host: localhost:8081
 info:
   contact: {}
-  description: api-orders
-  termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
-  version: "1.0"
 paths:
   /backend/orders/{id}:
     get:
@@ -173,9 +169,4 @@ paths:
       summary: Cancel an order
       tags:
       - orders
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Access-token
-    type: apiKey
 swagger: "2.0"

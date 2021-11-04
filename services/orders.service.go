@@ -33,21 +33,27 @@ func (model OrderService) Create(input forms.CreateOrder, userId string) (primit
 		log.Printf("Could not create Order: %v", err)
 		return primitive.NilObjectID, err
 	}
+	go model.SendOrderToPayment(result.InsertedID.(primitive.ObjectID))
 	return result.InsertedID.(primitive.ObjectID), err
 }
 
 func (model OrderService) SendOrderToPayment(orderId primitive.ObjectID) {
 	var order models.Order
+	collection := getCollection()
 
-	result := getCollection().FindOne(context.TODO(), bson.D{bson.E{"_id", orderId}})
+	result := collection.FindOne(context.TODO(), bson.D{bson.E{"_id", orderId}})
 	result.Decode(&order)
 
-	err := new(PaymentServices).SendOrderToPayment(order)
+	paymentService := new(PaymentServices)
+
+	err := paymentService.SendOrderToPayment(order)
 
 	if err != nil {
-
+		log.Fatalln(err)
+		return
 	}
 
+	collection.UpdateByID(context.TODO(), orderId, bson.D{bson.E{"status", models.ORDER_STATUS_CONFIRMED}})
 }
 
 func (model OrderService) FindOneById(id primitive.ObjectID) (*models.Order, error) {

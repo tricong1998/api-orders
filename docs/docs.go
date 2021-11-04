@@ -18,7 +18,6 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {},
         "version": "{{.Version}}"
     },
@@ -258,6 +257,9 @@ var doc = `{
                 "id": {
                     "type": "string"
                 },
+                "isSendToPayment": {
+                    "type": "boolean"
+                },
                 "products": {
                     "type": "array",
                     "items": {
@@ -286,13 +288,6 @@ var doc = `{
                 }
             }
         }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Access-token",
-            "in": "header"
-        }
     }
 }`
 
@@ -307,12 +302,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.0",
-	Host:        "localhost:8081",
-	BasePath:    "/api",
+	Version:     "",
+	Host:        "",
+	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "Swagger Example API",
-	Description: "api-orders",
+	Title:       "",
+	Description: "",
 }
 
 type s struct{}

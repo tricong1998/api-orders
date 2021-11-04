@@ -1,14 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "api-orders",
-        "title": "Swagger Example API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:8081",
-    "basePath": "/api",
     "paths": {
         "/backend/orders/{id}": {
             "get": {
@@ -243,6 +237,9 @@
                 "id": {
                     "type": "string"
                 },
+                "isSendToPayment": {
+                    "type": "boolean"
+                },
                 "products": {
                     "type": "array",
                     "items": {
@@ -270,13 +267,6 @@
                     "type": "number"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Access-token",
-            "in": "header"
         }
     }
 }
