@@ -1,0 +1,172 @@
+definitions:
+  forms.CreateOrder:
+    properties:
+      product:
+        items:
+          $ref: '#/definitions/forms.Product'
+        type: array
+    required:
+    - product
+    type: object
+  forms.Product:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    required:
+    - amount
+    - name
+    - price
+    type: object
+  models.Order:
+    properties:
+      id:
+        type: string
+      isSendToPayment:
+        type: boolean
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      status:
+        type: string
+      userId:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /backend/orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-backend-read-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Find an order
+      tags:
+      - orders
+  /backend/orders/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-backend-cancel-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel an order
+      tags:
+      - orders
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create an order with status Created
+      operationId: api-orders-create-order
+      parameters:
+      - description: Add Product
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/forms.CreateOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: id
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create an order
+      tags:
+      - orders
+  /orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-read-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Find an order
+      tags:
+      - orders
+  /orders/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Get an created order
+      operationId: api-orders-cancel-order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel an order
+      tags:
+      - orders
+swagger: "2.0"
